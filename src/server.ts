@@ -1,7 +1,14 @@
-
+import * as dotenv from "dotenv";
+const res = dotenv.config()
+if(res.error){
+    console.log(`Error loading env vars: ${res.error}`)
+    process.exit(1)
+}
 import * as express from "express"
 import { root } from "./routes/root";
-import { isInt } from "./utils";
+import { isInt } from "./utils/utils";
+import { logger } from "./utils/logger";
+
 
 const app = express()
 
@@ -12,19 +19,13 @@ function setupExpress(){
 function startServer(){
 
     const portArg = process.argv[2]
-    let port;
-    //port from command line input takes highest priority, then port from .env, then default port
-    if(isInt(portArg)){
-        port = parseInt(portArg)
-    }
-    else{
-        port = process.env.port;
-    }
+    //port from env takes highest priority, then port from command line, then default port
+    let port = isInt(process.env.port) ? parseInt(process.env.port): null;
     if(!port){
-        port = 8080
+        port = isInt(portArg)? parseInt(portArg) : 8080; 
     }
     app.listen(port, () => {
-        console.log(`Server started on port ${port}`)
+       logger.info(`Server started on port ${port}`)
     })
 }
 
