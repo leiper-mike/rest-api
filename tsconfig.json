@@ -1,6 +1,8 @@
 {
     "compilerOptions":{
         "target": "ES5",
-        "outDir": "dist"
+        "outDir": "dist",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     }
 }

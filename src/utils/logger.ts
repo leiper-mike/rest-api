@@ -1,7 +1,8 @@
+import { config } from "./config";
 import * as winston from "winston"
 
 export const logger = winston.createLogger({
-    level: process.env.logger_level,
+    level: config.loggerLevel,
     format: winston.format.json(),
     transports: [
         new winston.transports.File({
@@ -14,7 +15,7 @@ export const logger = winston.createLogger({
     ]
 });
 
-if(process.env.NODE_ENV != "prod"){
+if(config.nodeEnv != "prod"){
     logger.add(new winston.transports.Console({
         format: winston.format.simple()
     }))
