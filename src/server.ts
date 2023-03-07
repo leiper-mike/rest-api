@@ -12,15 +12,25 @@ import { isInt } from "./utils/utils";
 import { logger } from "./utils/logger";
 import { AppDataSource } from "./db/dataSource";
 import { Logger } from "winston";
-import { getAllCourses } from "./routes/courses";
+import { createCourse, deleteCourseAndLessons, findCourseById, findCourseByUrl, findCourseLessons, getAllCourses, updateCourse } from "./routes/courses";
 import { errorHandler } from "./middleware/errorHandler";
 
+const cors = require("cors")
+const bodyParser = require("body-parser")
 
 const app = express()
 
 function setupExpress(){
+    app.use(cors({origin:true}))
+    app.use(bodyParser.json())
     app.route("/").get(root);
     app.route("/api/courses").get(getAllCourses);
+    app.route("/api/courses/:courseUrl").get(findCourseByUrl)
+    app.route("/api/courses/id/:courseId").get(findCourseById)
+    app.route("/api/courses/:courseId/lessons").get(findCourseLessons)
+    app.route("/api/courses/:courseId").patch(updateCourse)
+    app.route("/api/courses/:courseId").post(createCourse)
+    app.route("/api/courses/:courseId").delete(deleteCourseAndLessons)
     app.use(errorHandler)
 }
 
